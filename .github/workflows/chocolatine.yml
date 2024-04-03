@@ -49,11 +49,11 @@ jobs:
 
       - name: cat codi
         run: |
-        NB_ERROR=$(cat /tmp/coding-style-reports.log | wc -l)
-        if [ $NB_ERROR -gt 0 ]; then
-          echo "Coding style KO"
-          exit 1
-        fi
+          NB_ERROR=$(cat /tmp/coding-style-reports.log | wc -l)
+          if [ $NB_ERROR -gt 0 ]; then
+            echo "Coding style KO"
+            exit 1
+          fi
 
 jobs:
   unit_tests:
