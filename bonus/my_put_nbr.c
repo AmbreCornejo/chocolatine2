@@ -5,7 +5,9 @@
 ** my_put_nbr
 */
 
-#include "include/my.h"
+#include <unistd.h>
+#include <stdlib.h>
+#include "includes/my.h"
 
 void my_put_nbr(int nb)
 {

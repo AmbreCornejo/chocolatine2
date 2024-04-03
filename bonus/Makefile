@@ -2,70 +2,65 @@
 ## EPITECH PROJECT, 2023
 ## makefile
 ## File description:
-## mini_printf
+## navy
 ##
 
-NAME	=	libhashtable.a
+NAME	=	my_navy
 
-SRCS	=	hash.c	\
-		my_strlen.c		\
-		hashtable.c	\
-		hashtable_actions.c	\
-		linked_lists.c	\
-		my_putchar.c	\
-		my_putstr.c	\
-		my_strcmp.c	\
-		my_strcpy.c	\
-		my_strdup.c	\
-		my_put_nbr.c
+SRCS	=	main.c	\
+			my_strcmp.c	\
+			display.c	\
+			my_put_nbr.c	\
+			my_putchar.c	\
+			load.c	\
+			my_strlen.c	\
+			parsing.c	\
+			connect.c	\
+			my_getnbr.c	\
+			error.c	\
+			attack.c	\
+			players_handle.c	\
+			singleton.c	\
+			win.c
 
-SRCS_TESTS	=	tests/tests.c	\
-				hash.c	\
-				my_strlen.c		\
-				hashtable.c	\
-				hashtable_actions.c	\
-				linked_lists.c	\
-				my_putchar.c	\
-				my_putstr.c	\
+SRCS_TESTS	=	my_getnbr.c	\
+				my_put_nbr.c	\
 				my_strcmp.c	\
-				my_strcpy.c	\
-				my_strdup.c	\
-				my_put_nbr.c
+				my_strlen.c	\
+				my_putchar.c	\
+				display.c	\
+				error.c	\
+				parsing.c	\
+				load.c	\
+				singleton.c	\
+				win.c
 
 OBJ	=	$(SRCS:.c=.o)
 
 CFLAGS 	=	-Werror -Wall -Wextra
 
-GTK_FLAGS = $(shell pkg-config --cflags --libs gtk+-3.0)
+LDFLAGS	=	--coverage -lcriterion
 
 all: 	$(NAME)
 
 $(NAME):	$(OBJ)
-	ar rc $(NAME) $(OBJ)
-	$(CC) main.c -L. -lhashtable $(GTK_FLAGS) -o secured
+	$(CC) -o $(NAME) $(OBJ)
 
 clean:
 	rm -f $(OBJ)
 	rm -f *~
-	rm -f *#
-	rm -f *.gcda
-	rm -f *.gcno
+	rm -f *.gc*
 
 fclean: 	clean
 	rm -f $(NAME)
 	rm -f unit_tests
-	rm -f secured
 
 re:	fclean all
 
 tests_run:
 	rm -f *.gcda
 	rm -f *.gcno
-	gcc -o unit_tests $(SRCS_TESTS) --coverage -lcriterion
+	gcc -o unit_tests $(SRCS_TESTS) tests/tests.c --coverage -lcriterion
 	./unit_tests
 	gcovr --exclude tests/
 	gcovr --exclude tests/ --branches
-
-debug:	all clean
-	$(CC) main.c -L. -lhashtable $(GTK_FLAGS)
-	./a.out

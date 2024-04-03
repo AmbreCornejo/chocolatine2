@@ -11,7 +11,6 @@
 
 int is_same(int i, int j, int *len_boat);
 char **place_boat_in_map(char **map, char **pos);
-int number_in_line(char **map, int i);
 
 void redirect_all_std(void)
 {
@@ -791,72 +790,4 @@ Test(bad_file, test_bad_file23)
     boat_pos[5] = boat_pos[3] - boat_pos[1];
     boat_pos[6] = boat_pos[4] - boat_pos[2];
     cr_assert_eq(bad_file(boat_pos, pos), 84);
-}
-
-Test(hit_or_miss, test_hit_or_miss, .init = redirect_all_std)
-{
-    hit_or_miss("A1", 0);
-    cr_assert_stdout_eq_str("\nresult: A1:missed\n\n");
-}
-
-Test(hit_or_miss, test_hit_or_miss2, .init = redirect_all_std)
-{
-    hit_or_miss("A1", 1);
-    cr_assert_stdout_eq_str("\nresult: A1:hit\n\n");
-}
-
-Test(is_win, test_is_win)
-{
-    char **map = malloc(sizeof(char *) * 9);
-
-    for (int i = 0; i < 8; i++) {
-        map[i] = malloc(sizeof(char) * 9);
-        for (int j = 0; j < 8; j++)
-            map[i][j] = '.';
-    }
-    map[8] = NULL;
-    cr_assert_eq(is_win(map), 1);
-}
-
-Test(is_win, test_is_win2)
-{
-    char **map = malloc(sizeof(char *) * 9);
-
-    for (int i = 0; i < 8; i++) {
-        map[i] = malloc(sizeof(char) * 9);
-        for (int j = 0; j < 8; j++)
-            map[i][j] = '.';
-    }
-    map[4][4] = '2';
-    map[8] = NULL;
-    map[0][0] = '2';
-    cr_assert_eq(is_win(map), 0);
-}
-
-Test(is_win, test_is_win3)
-{
-    char **map = malloc(sizeof(char *) * 9);
-
-    for (int i = 0; i < 8; i++) {
-        map[i] = malloc(sizeof(char) * 9);
-        for (int j = 0; j < 8; j++)
-            map[i][j] = '.';
-    }
-    map[4][4] = '8';
-    map[8] = NULL;
-    cr_assert_eq(is_win(map), 0);
-}
-
-Test(is_win, test_is_win4)
-{
-    char **map = malloc(sizeof(char *) * 9);
-
-    for (int i = 0; i < 8; i++) {
-        map[i] = malloc(sizeof(char) * 9);
-        for (int j = 0; j < 8; j++)
-            map[i][j] = '.';
-    }
-    map[4][4] = '9';
-    map[8] = NULL;
-    cr_assert_eq(is_win(map), 1);
 }

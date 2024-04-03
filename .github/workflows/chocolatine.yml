@@ -6,7 +6,7 @@ on:
 
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2028/B-DOP-200-MPL-2-1-chocolatine-ambre.cornejo.git"
-  EXECUTABLES: "my_exec"
+  EXECUTABLES: "my_navy"
 
 jobs:
   compil:
