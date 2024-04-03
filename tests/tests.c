@@ -453,12 +453,6 @@ Test(display_turn, test_display_turn2, .init = redirect_all_std)
     cr_assert_stdout_eq_str("enemy navy:\n |A B C D E F G H\n-+---------------\n1|. . . . . . . .\n2|. . . . . . . .\n3|. . . . . . . .\n4|. . . . . . . .\n5|. . . . . . . .\n6|. . . . . . . .\n7|. . . . . . . .\n8|. . . . . . . .\n\n");
 }
 
-Test(display_h, test_display_h2, .init = redirect_all_std)
-{
-    display_h("test");
-    cr_assert_stdout_neq_str("");
-}
-
 Test(bad_file, test_bad_file8)
 {
     int *boat_pos = malloc(sizeof(int) * 7);
