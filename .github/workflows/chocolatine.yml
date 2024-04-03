@@ -31,8 +31,7 @@ jobs:
       
       - name: clean
         run: make clean
-  
-jobs:
+
   coding_style:
     runs-on: ubuntu-latest
     container: ghcr.io/epitech/coding-style-checker:latest
@@ -55,7 +54,6 @@ jobs:
             exit 1
           fi
 
-jobs:
   unit_tests:
     runs-on: ubuntu-latest
 
@@ -66,7 +64,6 @@ jobs:
       - name: unit_tests
         run: make tests_run
 
-jobs:
   mirroring:
     runs-on: ubuntu-latest
 
