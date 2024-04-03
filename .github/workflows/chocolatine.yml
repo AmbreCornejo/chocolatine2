@@ -1,13 +1,73 @@
 name: Chocolate Workflow
 on:
   push:
-    branches:
-      - main
+    branches-ignore:
+      - 'ga-ignore-*'
+      - $default-branch
+  pull_request:
+    branches-ignore:
+      - 'ga-ignore-*'
+
+env:
+  MIRROR_URL: "git@github.com:EpitechPromo2028/B-DOP-200-MPL-2-1-chocolatine-ambre.cornejo.git"
+  EXECUTABLES: "directory1/executableA,directory2/executableB"
 
 jobs:
-  build:
+  check_coding_style:
     runs-on: ubuntu-latest
+    if: github.repository != env.MIRROR_URL
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
+      - name: Check coding style
+        run: check.sh $(pwd) $(pwd)
+        continue-on-error: true
+
+      - name: Display coding style errors
+        run: cat coding-style-reports.log
+
+      - name: Fail if coding style errors
+        run: exit $(grep -c "" coding-style-reports.log)
+
+  check_program_compilation:
+    runs-on: epitechcontent/epitest-docker
+    if: github.repository != env.MIRROR_URL
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Launch make
+        run: make
+        timeout-minutes: 2
+
+      - name: Clean repository
+        run: make clean
+
+      - name: Verify executables
+        run: |
+          IFS=',' read -ra EXECS <<< "$EXECUTABLES"
+          for EXEC in "${EXECS[@]}"; do
+            if [ ! -x "$EXEC" ]; then
+              echo "Executable $EXEC not found or not executable"
+              exit 1
+            fi
+          done
+
+  run_tests:
+    runs-on: epitechcontent/epitest-docker
+    if: github.repository != env.MIRROR_URL
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run tests
+        run: make tests_run
+        timeout-minutes: 2
+
+  push_to_mirror:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.repository != env.MIRROR_URL
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -15,6 +75,5 @@ jobs:
       - name: Repository mirroring
         uses: pixta-dev/repository-mirroring-action@v1
         with:
-          target_repo_url: 
-            "git@github.com:EpitechPromo2028/B-DOP-200-MPL-2-1-chocolatine-ambre.cornejo.git"
+          target_repo_url: ${{env.MIRROR_URL}}
           ssh_private_key: ${{secrets.GIT_SSH_PRIVATE_KEY}}
