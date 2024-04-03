@@ -11,6 +11,9 @@ env:
 jobs:
   compil:
     runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker:latest
+    timeout-minutes: 2
+    needs: [coding_style]
 
     steps:
       - name: Checkout repository
@@ -34,6 +37,7 @@ jobs:
 
   coding_style:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     container: ghcr.io/epitech/coding-style-checker:latest
 
     steps:
@@ -56,6 +60,9 @@ jobs:
 
   unit_tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
+    container: epitechcontent/epitest-docker:latest
+    needs: [compil]
 
     steps:
       - name: Checkout repository
