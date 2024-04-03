@@ -49,7 +49,7 @@ jobs:
 
       - name: cat codi
         run: |
-        NB_ERROR=$(wc -l < /tmp/coding_style_report.txt)
+        NB_ERROR=$(cat /tmp/coding-style-reports.log | wc -l)
         if [ $NB_ERROR -gt 0 ]; then
           echo "Coding style KO"
           exit 1
