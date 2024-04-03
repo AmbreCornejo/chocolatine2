@@ -49,8 +49,8 @@ jobs:
 
       - name: cat codi
         run: |
-        error=(cat /tmp/coding_style_report.txt | wc -l)
-        if [ $error -gt 0 ]; then
+        ERROR=(cat /tmp/coding_style_report.txt | wc -l)
+        if [ $ERROR -gt 0 ]; then
           echo "Coding style KO"
           exit 1
         fi
