@@ -1,73 +1,75 @@
 name: Chocolate Workflow
 on:
   push:
-    branches-ignore:
-      - 'ga-ignore-*'
-      - $default-branch
-  pull_request:
-    branches-ignore:
-      - 'ga-ignore-*'
+    branches:
+      - main
 
 env:
   MIRROR_URL: "git@github.com:EpitechPromo2028/B-DOP-200-MPL-2-1-chocolatine-ambre.cornejo.git"
-  EXECUTABLES: "directory1/executableA,directory2/executableB"
+  EXECUTABLES: "my_exec"
 
 jobs:
-  check_coding_style:
+  compil:
     runs-on: ubuntu-latest
-    if: github.repository != env.MIRROR_URL
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Check coding style
-        run: check.sh $(pwd) $(pwd)
-        continue-on-error: true
-
-      - name: Display coding style errors
-        run: cat coding-style-reports.log
-
-      - name: Fail if coding style errors
-        run: exit $(grep -c "" coding-style-reports.log)
-
-  check_program_compilation:
-    runs-on: epitechcontent/epitest-docker
-    if: github.repository != env.MIRROR_URL
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Launch make
+      - name: push
         run: make
-        timeout-minutes: 2
 
-      - name: Clean repository
-        run: make clean
-
-      - name: Verify executables
+      - name: check_compil
         run: |
-          IFS=',' read -ra EXECS <<< "$EXECUTABLES"
-          for EXEC in "${EXECS[@]}"; do
-            if [ ! -x "$EXEC" ]; then
-              echo "Executable $EXEC not found or not executable"
+          for file in ${{env.EXECUTABLES}}; do
+            if [ ! -f $file ]; then
+              echo "Compilation KO"
               exit 1
             fi
+          echo "Compilation OK"
           done
+      
+      - name: clean
+        run: make clean
+  
+jobs:
+  coding_style:
+    runs-on: ubuntu-latest
+    container: ghcr.io/epitech/coding-style-checker:latest
 
-  run_tests:
-    runs-on: epitechcontent/epitest-docker
-    if: github.repository != env.MIRROR_URL
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Run tests
-        run: make tests_run
-        timeout-minutes: 2
+      - name: coding_style
+        run: make fclean
 
-  push_to_mirror:
+      - name: check_coding_style
+        run: check.sh . /tmp
+
+      - name: cat codi
+        run: |
+        error=(cat /tmp/coding_style_report.txt | wc -l)
+        if [ $error -gt 0 ]; then
+          echo "Coding style KO"
+          exit 1
+        fi
+
+jobs:
+  unit_tests:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.repository != env.MIRROR_URL
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: unit_tests
+        run: make tests_run
+
+jobs:
+  mirroring:
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -75,5 +77,6 @@ jobs:
       - name: Repository mirroring
         uses: pixta-dev/repository-mirroring-action@v1
         with:
-          target_repo_url: ${{env.MIRROR_URL}}
+          target_repo_url: 
+            ${{env.MIRROR_URL}}
           ssh_private_key: ${{secrets.GIT_SSH_PRIVATE_KEY}}
